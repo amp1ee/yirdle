@@ -1,0 +1,18 @@
+body {
+    background-color: #ddddcc;
+}
+
+.hdr {
+    color: green;
+    font-size: 50px;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    padding: 3px;
+}
+
+.col {
+    padding: 3px;
+}
