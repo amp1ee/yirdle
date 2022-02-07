@@ -5,6 +5,18 @@ var active_row = 1;
 const WORDLEN = 5;
 const MAXROW = 6;
 
+const KEY_INACTIVE = 0;
+const KEY_INITIAL = 1;
+const KEY_SPOTON = 2;
+const KEY_INWORD = 3;
+
+const t_bgcolors = [
+	'#ee9090',
+	'#ddddcc',
+	'#90ee90',
+	'#eeee90'
+];
+
 const alphabet = "йцукенгшщзхїфівапролджєячсмитьбю";
 var alphabit   = "11111111111111111111111111111111";
 
@@ -17,11 +29,15 @@ function draw_keyboard() {
 
 	var row1, row2, row3;
 
-	if (active_row == 1) {
+	row1 = document.getElementById("row1");
+	row2 = document.getElementById("row2");
+	row3 = document.getElementById("row3");
+
+	if (row1 == null) {
 		row1 = document.createElement("div");
 		row1.classList.add("row");
 		row1.id = "row1";
-		
+
 		row2 = document.createElement("div");
 		row2.classList.add("row");
 		row2.id = "row2";
@@ -35,10 +51,6 @@ function draw_keyboard() {
 		keyboard.appendChild(row1);
 		keyboard.appendChild(row2);
 		keyboard.appendChild(row3);
-	} else {
-		row1 = document.getElementById("row1");
-		row2 = document.getElementById("row2");
-		row3 = document.getElementById("row3");
 	}
 
 	while (row1.firstChild) {
@@ -65,10 +77,8 @@ function draw_keyboard() {
 		key_in.setAttribute("readonly", "");
 		key_in.value = letter;
 
-		if (alphabit.split("")[i] == 0) {
-			key.setAttribute("style", "background-color: #ee9090");
-		}
-
+		var key_status = alphabit.split("")[i];
+		key.setAttribute("style", "background-color: " + t_bgcolors[key_status]);
 		key.appendChild(key_in);
 
 		if (i < row_1st) {
@@ -83,15 +93,15 @@ function draw_keyboard() {
 
 }
 
-function mark_inactive_letter(inactive_letter) {
+function mark_letter(marked_letter, type) {
 
 	var i = 0;
 
 	arr_alphabit = alphabit.split("");
 
 	for (var l of alphabet.split("")) {
-		if (l == inactive_letter) {
-			arr_alphabit[i] = "0";
+		if (l == marked_letter && arr_alphabit[i] != KEY_SPOTON) {
+			arr_alphabit[i] = type.toString();
 		}
 		i++;
 	}
@@ -116,26 +126,38 @@ function check_row(number) {
 	// Entered all letters:
 	if (row_letters == WORDLEN) {
 		var guessed = 0;
+		var key_status = KEY_INITIAL;
 
 		for (let i = 1; i <= WORDLEN; i++) {
 			var cur = letters[i - 1];
+
 			if (picked[i - 1] == cur.value) {
 				guessed += 1;
-				cur.setAttribute("style", "background-color: #90ee90");
+				key_status = KEY_SPOTON;
 			}
 			else if (picked.includes(cur.value)) {
-				cur.setAttribute("style", "background-color: #eeee90");
+				key_status = KEY_INWORD;
 			}
 			else {
-				mark_inactive_letter(cur.value);
+				key_status = KEY_INACTIVE;
 			}
+			mark_letter(cur.value, key_status);
+
 			cur.setAttribute("disabled", "disabled");
+			if (key_status != KEY_INACTIVE) {
+				cur.setAttribute("style", "background-color: " + t_bgcolors[key_status]);
+			}
 		}
 
-		// Guessed the wordle -> win:
 		if (guessed == WORDLEN) {
+			btn.innerHTML = '<b>Перемога!</b>';
+			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_SPOTON]);
 			active_row = MAXROW + 1;
 			return;
+		}
+		else if (active_row == MAXROW) {
+			btn.innerHTML = '<b>Поразка</b>';
+			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_INACTIVE]);
 		}
 
 		active_row += 1;
