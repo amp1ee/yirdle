@@ -111,6 +111,7 @@ function mark_letter(marked_letter, type) {
 
 function check_row(number) {
 	var letters = [];
+	var word = [];
 	var row_letters = 0;
 	var guessed = 0;
 	var cur = {};
@@ -122,20 +123,18 @@ function check_row(number) {
 	for (let i = 1; i <= WORDLEN; i++) {
 		letters[i - 1] = document.getElementById('letter' + number + i);
 		if (letters[i - 1].value) {
+			word[row_letters] = letters[i - 1].value;
 			row_letters += 1;
 		}
 	}
 
 	// Entered all letters:
 	if (row_letters == WORDLEN) {
+		word = word.join("");
 
-		for (let i = 1; i <= WORDLEN; i++) {
-			cur = letters[i - 1];
-
-			if (!alphabet.includes(cur.value)) {
-				btn.classList.add("apply-shake");
-				return;
-			}
+		if (!word_list.includes(word)) {
+			btn.classList.add("apply-shake");
+			return;
 		}
 
 		for (let i = 1; i <= WORDLEN; i++) {

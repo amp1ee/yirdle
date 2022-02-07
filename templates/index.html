@@ -187,12 +187,11 @@
    
 </div>
 
-
-
 {% endblock content %}
 {% block scripts %}
 <script type="text/javascript">
-var picked_hidden = "{{ picked }}"
+var picked_hidden = "{{ picked }}";
+var word_list = {{ wordlist | safe }};
 </script>
 <script src="../static/js/yirdle.js" type="text/javascript"></script>
 {{ super() }}
