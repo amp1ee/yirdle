@@ -110,8 +110,11 @@ function mark_letter(marked_letter, type) {
 }
 
 function check_row(number) {
-	var letters = ['', '', '', '', ''];
+	var letters = [];
 	var row_letters = 0;
+	var guessed = 0;
+	var cur = {};
+	var key_status = KEY_INITIAL;
 
 	if (number > MAXROW)
 		return;
@@ -125,11 +128,18 @@ function check_row(number) {
 
 	// Entered all letters:
 	if (row_letters == WORDLEN) {
-		var guessed = 0;
-		var key_status = KEY_INITIAL;
 
 		for (let i = 1; i <= WORDLEN; i++) {
-			var cur = letters[i - 1];
+			cur = letters[i - 1];
+
+			if (!alphabet.includes(cur.value)) {
+				btn.classList.add("apply-shake");
+				return;
+			}
+		}
+
+		for (let i = 1; i <= WORDLEN; i++) {
+			cur = letters[i - 1];
 
 			if (picked[i - 1] == cur.value) {
 				guessed += 1;
@@ -173,6 +183,10 @@ btn.onclick = function() {
 	if (active_row > MAXROW) {
 		btn.setAttribute("disabled", "disabled");
 	}
+}
+
+btn.onanimationend = function(event) {
+	btn.classList.remove("apply-shake");
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
