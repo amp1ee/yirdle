@@ -195,21 +195,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			lett = document.getElementById('letter' + j + i);
 			lett.setAttribute("autocomplete", "chrome-off");
 
-			if (i < WORDLEN) {
-				lett.onkeyup = function() {
-					if (this.value) {
-						next = document.getElementById('letter' + j + (i + 1));
-						next.focus();
+			lett.onkeydown = function(event) {
+				// Handle Backspace key
+				if (event.keyCode == 8) {
+					if (this.value)
+						this.value = '';
+					else {
+						if (i > 1) {
+							prev = document.getElementById('letter' + j + (i - 1));
+							prev.focus();
+						}
 					}
-				};
-			}
-			else {
-				lett.onkeyup = function(event) {
-					if (event.keyCode == 13) {
-						btn.click();
-					}
-				};
-			}
+				}
+			};
+
+			lett.oninput = function(event) {
+				if (i < WORDLEN && this.value) {
+					next = document.getElementById('letter' + j + (i + 1));
+					next.focus();
+				}
+			};
+
+			lett.onkeyup = function(event) {
+				// Enter key
+				if (i == WORDLEN && event.keyCode == 13) {
+					btn.click();
+				}
+			};
 		}
 	}
 
