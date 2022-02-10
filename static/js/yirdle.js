@@ -17,11 +17,11 @@ const t_bgcolors = [
 	'#eeee90'
 ];
 
-const alphabet = "йцукенгшщзхїфівапролджєячсмитьбю";
-var alphabit   = "11111111111111111111111111111111";
+const alphabet = "йцукенгґшщзхїфівапролджєячсмитьбю";
+var alphabit   = "111111111111111111111111111111111";
 
 function draw_keyboard() {
-	const row_1st = 12;
+	const row_1st = 13;
 	const row_2nd = row_1st + 11;
 	const row_3rd = row_2nd + 9;
 
