@@ -1,10 +1,16 @@
 body {
     background-color: #ddddcc;
+    font-family: 'Roboto Slab', serif;
+}
+
+input {
+    text-align: center;
+    font-size: 1.5em;
 }
 
 .hdr {
     color: #454545;
-    font-size: 50px;
+    font-size: 42px;
     text-align: center;
 }
 
@@ -19,8 +25,24 @@ body {
     padding: 3px;
 }
 
+.letter {
+    width: 3em;
+    height: 3em;
+}
+
 #keyboard {
     margin-top: 50px;
+}
+
+#statistics_modal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#statistics_modal_title {
+    font-weight: bold;
 }
 
 @-webkit-keyframes shake {

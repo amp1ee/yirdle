@@ -1,6 +1,10 @@
 var btn = document.getElementById('enter');
+var stats_modal = document.getElementById('statistics_modal');
+var stats_mbody = stats_modal.getElementsByClassName('modal-body')[0];
+var stats_mclose = stats_modal.getElementsByTagName('button');
+
 var picked = picked_hidden.split("").reverse().join("");
-var active_row = 1;
+var game_status = "init";
 
 const WORDLEN = 5;
 const MAXROW = 6;
@@ -19,6 +23,113 @@ const t_bgcolors = [
 
 const alphabet = "йцукенгґшщзхїфівапролджєячсмитьбю";
 var alphabit   = "111111111111111111111111111111111";
+
+const clid = "yirdle-clid";
+
+var active_row = 1;
+
+var initial_state = {
+    row_index: 0,
+    solution: null,
+    game_status: game_status,
+    games_played: 0,
+    last_played: null,
+    last_completed: null,
+    last_completed_fmt: "",
+    cur_streak: 0,
+    board_state: null,
+};
+
+function objectify(cookie) {
+	var ck;
+	var now = new Date();
+
+	if (cookie == null)
+	    ck = new Object();
+	else
+	    ck = cookie;
+
+	ck.row_index = active_row;
+	ck.game_status = game_status;
+	if (game_status == "win" || game_status == "loss") {
+		if (ck.solution != picked) {
+			ck.games_played += 1;
+			ck.cur_streak += (game_status == "win");
+		}
+		ck.solution = picked;
+	}
+	ck.last_played = new Date();
+	if (game_status == "win") {
+		ck.last_completed = now;
+		ck.last_completed_fmt = now.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric',
+
+		 });
+	}
+	if (game_status == "loss") {
+		ck.cur_streak = 0;
+	}
+
+	ck.board_state = store_board_state();
+
+	return ck;
+}
+
+function get_cookie() {
+    var data = window.localStorage.getItem(clid);
+
+    if (data == null)
+    	data = JSON.stringify(initial_state);
+
+    return JSON.parse(data);
+}
+
+function set_cookie() {
+    var cookie = get_cookie();
+    ! function(data) {
+    	window.localStorage.setItem(clid, JSON.stringify(data))
+    } (objectify(cookie));
+}
+
+function disable_rows(current_row) {
+	for (let i = current_row + 1; i <= MAXROW; i++) {
+		for (let j = 1; j <= WORDLEN; j++) {
+			letter = document.getElementById('letter' + i + j);
+			letter.setAttribute("disabled", "disabled");
+		}
+	}
+}
+
+function store_board_state() {
+	var board_state = new Array(MAXROW * WORDLEN);
+
+	for (let i = 1; i <= MAXROW; i++) {
+		for (let j = 1; j <= WORDLEN; j++) {
+			board_state[(i - 1) * WORDLEN + (j - 1)] = document.getElementById('letter' + i + j).value;
+		}
+	}
+	return board_state;
+}
+
+function restore_board_state() {
+	var ck = get_cookie();
+	var letter;
+
+	if (ck.board_state == null)
+		return;
+
+	for (let i = 1; i <= MAXROW; i++) {
+		for (let j = 1; j <= WORDLEN; j++) {
+			letter = document.getElementById('letter' + i + j);
+			letter.value = ck.board_state[(i - 1) * WORDLEN + (j - 1)];
+		}
+		check_row(i);
+	}
+}
 
 function draw_keyboard() {
 	const row_1st = 13;
@@ -161,12 +272,16 @@ function check_row(number) {
 		if (guessed == WORDLEN) {
 			btn.innerHTML = '<b>Перемога!</b>';
 			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_SPOTON]);
-			active_row = MAXROW + 1;
+			btn.setAttribute("disabled", "disabled");
+			disable_rows(active_row);
+			game_status = "win";
 			return;
 		}
 		else if (active_row == MAXROW) {
 			btn.innerHTML = '<b>Поразка</b>';
 			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_INACTIVE]);
+			btn.setAttribute("disabled", "disabled");
+			game_status = "loss";
 		}
 
 		active_row += 1;
@@ -175,18 +290,37 @@ function check_row(number) {
 
 btn.onclick = function() {
 
-	if (active_row <= MAXROW) {
+	if (game_status == "init" || game_status == "running") {
+		game_status = "running";
 		check_row(active_row);
+		set_cookie();
 		draw_keyboard();
 	}
-	if (active_row > MAXROW) {
-		btn.setAttribute("disabled", "disabled");
+	if (game_status == "win" || game_status == "loss") {
+		set_cookie();
+		stats_modal_show(game_status);
 	}
 }
 
 btn.onanimationend = function(event) {
 	btn.classList.remove("apply-shake");
 }
+
+function stats_modal_hide() {
+	stats_modal.classList.remove('show');
+	stats_modal.classList.remove('in');
+}
+
+function stats_modal_show(game_status) {
+	var ck = get_cookie();
+	var summary = (game_status == 'win') ? '<b>Solved today\'s wordle</b>' : '<b>Lost today</b>';
+
+	stats_mbody.innerHTML = summary + '<br><b>Row:</b> ' + ck.row_index + '<br><b>Time:</b> ' + ck.last_completed_fmt + '<br><b>Streak:</b> ' + ck.cur_streak;
+	stats_modal.classList.add('show');
+	stats_modal.classList.add('in');
+}
+
+stats_mclose[0].onclick = stats_modal_hide;
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
@@ -226,5 +360,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 
 	draw_keyboard();
+
+	var ck = get_cookie();
+
+	if (ck.solution == picked) {
+		restore_board_state();
+		stats_modal_show(ck.game_status);
+	}
 
 });
