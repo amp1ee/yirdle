@@ -30,6 +30,10 @@ input {
     height: 3em;
 }
 
+.modal-dialog {
+    margin-top: 160px;
+}
+
 #keyboard {
     margin-top: 50px;
 }

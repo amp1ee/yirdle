@@ -215,11 +215,10 @@ function draw_keyboard() {
 
 function share_action() {
 	var ck = get_cookie();
-	var bs = ck.board_state;
 	var txt = [];
 	var txt_area = document.createElement("textarea");
 
-	for (let i = 0; i < MAXROW; i++) {
+	for (let i = 0; i < ck.row_index; i++) {
 		for (let j = 0; j < (WORDLEN + 1); j++) {
 			var letter = null;
 			var index = i * WORDLEN + j;
@@ -271,9 +270,10 @@ function mark_letter(marked_letter, type) {
 	var i = 0;
 
 	arr_alphabit = alphabit.split("");
+	marked_letter = marked_letter.toLowerCase();
 
 	for (var l of alphabet.split("")) {
-		if (l == marked_letter && arr_alphabit[i] != KEY_SPOTON) {
+		if (marked_letter == l && arr_alphabit[i] != KEY_SPOTON) {
 			arr_alphabit[i] = type.toString();
 		}
 		i++;
@@ -305,7 +305,7 @@ function check_row(number) {
 	if (row_letters == WORDLEN) {
 		word = word.join("");
 
-		if (!word_list.includes(word)) {
+		if (!word_list.includes(word.toLowerCase())) {
 			btn.classList.add("apply-shake");
 			return;
 		}
@@ -313,11 +313,11 @@ function check_row(number) {
 		for (let i = 1; i <= WORDLEN; i++) {
 			cur = letters[i - 1];
 
-			if (picked[i - 1] == cur.value) {
+			if (picked[i - 1] == cur.value.toLowerCase()) {
 				guessed += 1;
 				key_status = KEY_SPOTON;
 			}
-			else if (picked.includes(cur.value)) {
+			else if (picked.includes(cur.value.toLowerCase())) {
 				key_status = KEY_INWORD;
 			}
 			else {
@@ -440,13 +440,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		}
 	}
 
-	draw_keyboard();
-
 	var ck = get_cookie();
 
 	if (ck.solution == picked) {
 		restore_board_state();
 		stats_modal_show(ck.game_status);
 	}
+
+	draw_keyboard();
 
 });
