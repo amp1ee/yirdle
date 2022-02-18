@@ -313,7 +313,19 @@ function stats_modal_hide() {
 
 function stats_modal_show(game_status) {
 	var ck = get_cookie();
-	var summary = (game_status == 'win') ? '<b>Solved today\'s wordle</b>' : '<b>Lost today</b>';
+    var summary;
+
+    switch (game_status) {
+    
+        case 'win':
+            summary = '<b>Solved today\'s wordle</b>';
+            break;
+        case 'loss':
+            summary = '<b>Lost today</b>';
+            break;
+        default:
+            summary = '';
+    }
 
 	stats_mbody.innerHTML = summary + '<br><b>Row:</b> ' + ck.row_index + '<br><b>Time:</b> ' + ck.last_completed_fmt + '<br><b>Streak:</b> ' + ck.cur_streak;
 	stats_modal.classList.add('show');
@@ -322,12 +334,18 @@ function stats_modal_show(game_status) {
 
 stats_mclose[0].onclick = stats_modal_hide;
 
+var records = document.getElementById('records_link');
+
+records.onclick = function() {
+    stats_modal_show(game_status);
+};
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	for (let j = 1; j <= MAXROW; j++) {
 		for (let i = 1; i <= WORDLEN; i++) {
 			lett = document.getElementById('letter' + j + i);
-			lett.setAttribute("autocomplete", "chrome-off");
+			lett.setAttribute("autocomplete", "off");
 
 			lett.onkeydown = function(event) {
 				// Handle Backspace key

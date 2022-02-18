@@ -34,13 +34,6 @@ input {
     margin-top: 50px;
 }
 
-#statistics_modal {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
 #statistics_modal_title {
     font-weight: bold;
 }
