@@ -1,7 +1,9 @@
 var btn = document.getElementById('enter');
 var stats_modal = document.getElementById('statistics_modal');
 var stats_mbody = stats_modal.getElementsByClassName('modal-body')[0];
-var stats_mclose = stats_modal.getElementsByTagName('button');
+var stats_mclose = stats_modal.getElementsByClassName('statistics_modal_x');
+var share_btn = document.getElementById('share_btn');
+var records = document.getElementById('records_link');
 
 var picked = picked_hidden.split("").reverse().join("");
 var game_status = "init";
@@ -19,6 +21,13 @@ const t_bgcolors = [
 	'#ddddcc',
 	'#90ee90',
 	'#eeee90'
+];
+
+const t_emojis = [
+	'⬛️',
+	'⬛️',
+	'🟩',
+	'🟨'
 ];
 
 const alphabet = "йцукенгґшщзхїфівапролджєячсмитьбю";
@@ -204,6 +213,59 @@ function draw_keyboard() {
 
 }
 
+function share_action() {
+	var ck = get_cookie();
+	var bs = ck.board_state;
+	var txt = [];
+	var txt_area = document.createElement("textarea");
+
+	for (let i = 0; i < MAXROW; i++) {
+		for (let j = 0; j < (WORDLEN + 1); j++) {
+			var letter = null;
+			var index = i * WORDLEN + j;
+			var bg_color = t_bgcolors[KEY_INACTIVE];
+			var style_attr = null;
+			var emoji_id = 0;
+
+			if (j != WORDLEN) {
+				letter = document.getElementById('letter' + (i+1) + (j+1));
+				style_attr = letter.getAttribute("style");
+				if (style_attr != null) {
+					bg_color = style_attr.split(' ')[1];
+				}
+				emoji_id = t_bgcolors.indexOf(bg_color);
+				txt.push(t_emojis[emoji_id]);
+			} else {
+				txt.push('\n');
+			}
+		}
+	}
+	txt_area.value = 'Їrdle: ' + ck.row_index + '/6\n';
+	txt_area.value += ck.last_completed_fmt + '\n';
+	txt_area.value += txt.join("");
+	txt_area.value += window.origin + '\n';
+	txt_area.style.top = "0";
+	txt_area.style.left = "0";
+	txt_area.style.position = "fixed";
+
+	document.body.appendChild(txt_area);
+	txt_area.focus();
+	txt_area.select();
+
+	try {
+		document.execCommand('copy');
+	} catch (err) {
+		console.error('Failed to copy shared text', err);
+	}
+
+	document.body.removeChild(txt_area);
+	share_btn.innerHTML = "<b>Copied!</b>";
+}
+
+function show_share_button() {
+	share_btn.classList.remove("invisible");
+}
+
 function mark_letter(marked_letter, type) {
 
 	var i = 0;
@@ -273,6 +335,7 @@ function check_row(number) {
 			btn.innerHTML = '<b>Перемога!</b>';
 			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_SPOTON]);
 			btn.setAttribute("disabled", "disabled");
+			show_share_button();
 			disable_rows(active_row);
 			game_status = "win";
 			return;
@@ -334,11 +397,11 @@ function stats_modal_show(game_status) {
 
 stats_mclose[0].onclick = stats_modal_hide;
 
-var records = document.getElementById('records_link');
-
 records.onclick = function() {
     stats_modal_show(game_status);
 };
+
+share_btn.onclick = share_action;
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
