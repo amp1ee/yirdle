@@ -43,6 +43,7 @@ var initial_state = {
     game_status: game_status,
     games_played: 0,
     last_played: null,
+    last_played_fmt: "",
     last_completed: null,
     last_completed_fmt: "",
     cur_streak: 0,
@@ -52,6 +53,14 @@ var initial_state = {
 function objectify(cookie) {
 	var ck;
 	var now = new Date();
+	var now_fmt = now.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric',
+
+	});
 
 	if (cookie == null)
 	    ck = new Object();
@@ -67,17 +76,11 @@ function objectify(cookie) {
 		}
 		ck.solution = picked;
 	}
-	ck.last_played = new Date();
+	ck.last_played = now;
+	ck.last_played_fmt = now_fmt;
 	if (game_status == "win") {
 		ck.last_completed = now;
-		ck.last_completed_fmt = now.toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-			hour: 'numeric',
-			minute: 'numeric',
-
-		 });
+		ck.last_completed_fmt = now_fmt;
 	}
 	if (game_status == "loss") {
 		ck.cur_streak = 0;
@@ -215,10 +218,14 @@ function draw_keyboard() {
 
 function share_action() {
 	var ck = get_cookie();
+	var row_max, row_c;
+	var time;
 	var txt = [];
 	var txt_area = document.createElement("textarea");
 
-	for (let i = 0; i < ck.row_index; i++) {
+	row_max = (game_status == "win") ? ck.row_index : MAXROW;
+
+	for (let i = 0; i < row_max; i++) {
 		for (let j = 0; j < (WORDLEN + 1); j++) {
 			var letter = null;
 			var index = i * WORDLEN + j;
@@ -239,8 +246,11 @@ function share_action() {
 			}
 		}
 	}
-	txt_area.value = 'Їrdle: ' + ck.row_index + '/6\n';
-	txt_area.value += ck.last_completed_fmt + '\n';
+
+	row_c = (game_status == "win") ? ck.row_index : 'X';
+	txt_area.value = 'Їrdle: ' + row_c + '/6\n';
+	time = (game_status == "win") ? ck.last_completed_fmt : ck.last_played_fmt;
+	txt_area.value += time + '\n';
 	txt_area.value += txt.join("");
 	txt_area.value += window.origin + '\n';
 	txt_area.style.top = "0";
@@ -335,9 +345,9 @@ function check_row(number) {
 			btn.innerHTML = '<b>Перемога!</b>';
 			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_SPOTON]);
 			btn.setAttribute("disabled", "disabled");
-			show_share_button();
 			disable_rows(active_row);
 			game_status = "win";
+			show_share_button();
 			return;
 		}
 		else if (active_row == MAXROW) {
@@ -345,6 +355,7 @@ function check_row(number) {
 			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_INACTIVE]);
 			btn.setAttribute("disabled", "disabled");
 			game_status = "loss";
+			show_share_button();
 		}
 
 		active_row += 1;
