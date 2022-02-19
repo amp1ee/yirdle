@@ -147,7 +147,7 @@ function restore_board_state() {
 function countdown() {
 	var i = setInterval(function() {
 		var now = new Date();
-		var tz = now.getTimezoneOffset();
+		var tz = -120;
 		var timeleft = 86400 - Math.floor((now - tz * 60 * 1000) / 1000) % 86400;
 		var text;
 
