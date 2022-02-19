@@ -275,7 +275,7 @@ function share_action() {
 		}
 
 		document.body.removeChild(txt_area);
-		share_btn.innerHTML = "<b>Copied!</b>";
+		share_btn.innerHTML = "<b>Скопійовано!</b>";
 
 	} else if (this.id == "tweet_btn") {
 		window.open('https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(window.origin) + '&text=' + encodeURIComponent(msg));
@@ -354,8 +354,12 @@ function check_row(number) {
 			}
 		}
 
+		var result;
+
 		if (guessed == WORDLEN) {
-			btn.innerHTML = '<b>Перемога!</b>';
+			result = '<b>Перемога!</b>';
+			btn.innerHTML = result;
+			document.getElementById('hdr').innerHTML = result;
 			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_SPOTON]);
 			btn.setAttribute("disabled", "disabled");
 			disable_rows(active_row);
@@ -364,7 +368,9 @@ function check_row(number) {
 			return;
 		}
 		else if (active_row == MAXROW) {
-			btn.innerHTML = '<b>Поразка</b>';
+			result = '<b>Поразка</b>';
+			btn.innerHTML = result;
+			document.getElementById('hdr').innerHTML = result;
 			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_INACTIVE]);
 			btn.setAttribute("disabled", "disabled");
 			game_status = "loss";
@@ -405,16 +411,16 @@ function stats_modal_show(game_status) {
     switch (game_status) {
     
         case 'win':
-            summary = '<b>Solved today\'s wordle</b>';
+            summary = '<b>Відгадане слово:</b> ' + picked;
             break;
         case 'loss':
-            summary = '<b>Lost today</b>';
+            summary = '<b>Поразка</b>';
             break;
         default:
             summary = '';
     }
 
-	stats_mbody.innerHTML = summary + '<br><b>Row:</b> ' + ck.row_index + '<br><b>Time:</b> ' + ck.last_completed_fmt + '<br><b>Streak:</b> ' + ck.cur_streak;
+	stats_mbody.innerHTML = summary + '<br><b>Ряд:</b> ' + ck.row_index + '<br><b>Час:</b> ' + ck.last_completed_fmt + '<br><b>Серія:</b> ' + ck.cur_streak;
 	stats_modal.classList.add('show');
 	stats_modal.classList.add('in');
 }

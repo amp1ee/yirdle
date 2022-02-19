@@ -13,7 +13,11 @@ button svg {
     vertical-align: middle;
 }
 
-.hdr {
+.navbar-header a {
+    color: white !important;
+}
+
+#hdr {
     color: #454545;
     font-size: 42px;
     text-align: center;
