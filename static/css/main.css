@@ -8,6 +8,11 @@ input {
     font-size: 1.5em;
 }
 
+button svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .hdr {
     color: #454545;
     font-size: 42px;

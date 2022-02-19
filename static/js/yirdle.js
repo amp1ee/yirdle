@@ -3,6 +3,7 @@ var stats_modal = document.getElementById('statistics_modal');
 var stats_mbody = stats_modal.getElementsByClassName('modal-body')[0];
 var stats_mclose = stats_modal.getElementsByClassName('statistics_modal_x');
 var share_btn = document.getElementById('share_btn');
+var tweet_btn = document.getElementById('tweet_btn');
 var records = document.getElementById('records_link');
 
 var picked = picked_hidden.split("").reverse().join("");
@@ -218,11 +219,13 @@ function draw_keyboard() {
 
 function share_action() {
 	var ck = get_cookie();
+	var msg;
 	var row_max, row_c;
 	var time;
 	var txt = [];
-	var txt_area = document.createElement("textarea");
 
+	row_c = (game_status == "win") ? ck.row_index : 'X';
+	time = (game_status == "win") ? ck.last_completed_fmt : ck.last_played_fmt;
 	row_max = (game_status == "win") ? ck.row_index : MAXROW;
 
 	for (let i = 0; i < row_max; i++) {
@@ -247,32 +250,42 @@ function share_action() {
 		}
 	}
 
-	row_c = (game_status == "win") ? ck.row_index : 'X';
-	txt_area.value = 'Їrdle: ' + row_c + '/6\n';
-	time = (game_status == "win") ? ck.last_completed_fmt : ck.last_played_fmt;
-	txt_area.value += time + '\n';
-	txt_area.value += txt.join("");
-	txt_area.value += window.origin + '\n';
-	txt_area.style.top = "0";
-	txt_area.style.left = "0";
-	txt_area.style.position = "fixed";
+	msg = 'Їrdle: ' + row_c + '/6\n';
+	msg += time + '\n';
+	msg += txt.join("");
+	msg += window.origin + '\n';
+    msg += '#wordle #yirdle\n';
 
-	document.body.appendChild(txt_area);
-	txt_area.focus();
-	txt_area.select();
+	if (this.id == "share_btn") {
+		var txt_area = document.createElement("textarea");
 
-	try {
-		document.execCommand('copy');
-	} catch (err) {
-		console.error('Failed to copy shared text', err);
+		txt_area.value = msg;
+		txt_area.style.top = "0";
+		txt_area.style.left = "0";
+		txt_area.style.position = "fixed";
+
+		document.body.appendChild(txt_area);
+		txt_area.focus();
+		txt_area.select();
+
+		try {
+			document.execCommand('copy');
+		} catch (err) {
+			console.error('Failed to copy shared text', err);
+		}
+
+		document.body.removeChild(txt_area);
+		share_btn.innerHTML = "<b>Copied!</b>";
+
+	} else if (this.id == "tweet_btn") {
+		window.open('https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(window.origin) + '&text=' + encodeURIComponent(msg));
 	}
 
-	document.body.removeChild(txt_area);
-	share_btn.innerHTML = "<b>Copied!</b>";
 }
 
-function show_share_button() {
+function show_share_buttons() {
 	share_btn.classList.remove("invisible");
+	tweet_btn.classList.remove("invisible");
 }
 
 function mark_letter(marked_letter, type) {
@@ -347,7 +360,7 @@ function check_row(number) {
 			btn.setAttribute("disabled", "disabled");
 			disable_rows(active_row);
 			game_status = "win";
-			show_share_button();
+			show_share_buttons();
 			return;
 		}
 		else if (active_row == MAXROW) {
@@ -355,7 +368,7 @@ function check_row(number) {
 			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_INACTIVE]);
 			btn.setAttribute("disabled", "disabled");
 			game_status = "loss";
-			show_share_button();
+			show_share_buttons();
 		}
 
 		active_row += 1;
@@ -413,6 +426,7 @@ records.onclick = function() {
 };
 
 share_btn.onclick = share_action;
+tweet_btn.onclick = share_action;
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
