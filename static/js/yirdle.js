@@ -39,16 +39,16 @@ const clid = "yirdle-clid";
 var active_row = 1;
 
 var initial_state = {
-    row_index: 0,
-    solution: null,
-    game_status: game_status,
-    games_played: 0,
-    last_played: null,
-    last_played_fmt: "",
-    last_completed: null,
-    last_completed_fmt: "",
-    cur_streak: 0,
-    board_state: null,
+	row_index: 0,
+	solution: null,
+	game_status: game_status,
+	games_played: 0,
+	last_played: null,
+	last_played_fmt: "",
+	last_completed: null,
+	last_completed_fmt: "",
+	cur_streak: 0,
+	board_state: null,
 };
 
 function objectify(cookie) {
@@ -64,9 +64,9 @@ function objectify(cookie) {
 	});
 
 	if (cookie == null)
-	    ck = new Object();
+		ck = new Object();
 	else
-	    ck = cookie;
+		ck = cookie;
 
 	ck.row_index = active_row;
 	ck.game_status = game_status;
@@ -93,19 +93,19 @@ function objectify(cookie) {
 }
 
 function get_cookie() {
-    var data = window.localStorage.getItem(clid);
+	var data = window.localStorage.getItem(clid);
 
-    if (data == null)
-    	data = JSON.stringify(initial_state);
+	if (data == null)
+		data = JSON.stringify(initial_state);
 
-    return JSON.parse(data);
+	return JSON.parse(data);
 }
 
 function set_cookie() {
-    var cookie = get_cookie();
-    ! function(data) {
-    	window.localStorage.setItem(clid, JSON.stringify(data))
-    } (objectify(cookie));
+	var cookie = get_cookie();
+	! function(data) {
+		window.localStorage.setItem(clid, JSON.stringify(data))
+	} (objectify(cookie));
 }
 
 function disable_rows(current_row) {
@@ -142,6 +142,31 @@ function restore_board_state() {
 		}
 		check_row(i);
 	}
+}
+
+function countdown() {
+	var i = setInterval(function() {
+		var now = new Date();
+		var tz = now.getTimezoneOffset();
+		var timeleft = 86400 - Math.floor((now - tz * 60 * 1000) / 1000) % 86400;
+		var text;
+
+		var hours = Math.floor((timeleft % (60 * 60 * 24)) / (60 * 60));
+		var minutes = Math.floor((timeleft % (60 * 60)) / (60));
+		var seconds = Math.floor((timeleft % (60)));
+
+		seconds = (seconds < 10) ? '0' + seconds : seconds;
+		minutes = (minutes < 10) ? '0' + minutes : minutes;
+		hours = (hours < 10) ? '0' + hours : hours;
+
+		text = '<b>Наступне слово за:</b> ';
+		text += hours + ":" + minutes + ":" + seconds + "\n";
+		document.getElementById("countdown").innerHTML = text;
+
+		if (timeleft < 0) {
+			clearInterval(i);
+		}
+	}, 100);
 }
 
 function draw_keyboard() {
@@ -254,7 +279,7 @@ function share_action() {
 	msg += time + '\n';
 	msg += txt.join("");
 	msg += window.origin + '\n';
-    msg += '#wordle #yirdle\n';
+	msg += '#wordle #yirdle\n';
 
 	if (this.id == "share_btn") {
 		var txt_area = document.createElement("textarea");
@@ -406,21 +431,32 @@ function stats_modal_hide() {
 
 function stats_modal_show(game_status) {
 	var ck = get_cookie();
-    var summary;
+	var timer;
+	var summary;
 
-    switch (game_status) {
-    
-        case 'win':
-            summary = '<b>Відгадане слово:</b> ' + picked;
-            break;
-        case 'loss':
-            summary = '<b>Поразка</b>';
-            break;
-        default:
-            summary = '';
-    }
+	switch (game_status) {
+	
+		case 'win':
+			summary = '<b>Відгадане слово:</b> ' + picked;
+			break;
+		case 'loss':
+			summary = '<b>Поразка</b>';
+			break;
+		default:
+			summary = '';
+	}
 
-	stats_mbody.innerHTML = summary + '<br><b>Ряд:</b> ' + ck.row_index + '<br><b>Час:</b> ' + ck.last_completed_fmt + '<br><b>Серія:</b> ' + ck.cur_streak;
+	timer = document.createElement('span');
+	timer.id = 'countdown';
+
+	stats_mbody.innerHTML = summary
+							+ '</br><b>Ряд:</b> ' + ck.row_index
+							+ '</br><b>Час:</b> ' + ck.last_completed_fmt
+							+ '</br><b>Серія:</b> ' + ck.cur_streak
+							+ '</br>';
+	stats_mbody.appendChild(timer);
+	countdown();
+
 	stats_modal.classList.add('show');
 	stats_modal.classList.add('in');
 }
@@ -428,7 +464,7 @@ function stats_modal_show(game_status) {
 stats_mclose[0].onclick = stats_modal_hide;
 
 records.onclick = function() {
-    stats_modal_show(game_status);
+	stats_modal_show(game_status);
 };
 
 share_btn.onclick = share_action;

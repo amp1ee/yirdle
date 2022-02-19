@@ -65,3 +65,6 @@ bootstrap = Bootstrap(app)
 def mainpage():
 	return render_template('index.html', picked=picked[::-1], wordlist=words)
 
+if __name__ == '__main__':
+    app.run()
+
