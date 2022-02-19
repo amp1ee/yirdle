@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*- #
 
+import os
 import re
 import random
+import datetime
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 
@@ -11,6 +13,8 @@ wordlist = """
 """
 words = []
 picked = 'xxxxx'
+d = datetime.datetime.now()
+picked_file = '/tmp/.yirdle-picked-' + d.strftime('%d.%m.%Y')
 
 def init():
 	global words
@@ -44,8 +48,13 @@ def sort_words(word_array):
 def pick_a_random_word_of_the_day():
 	global picked
 
-	picked = random.choice(words)
-	# print(f"picked word {picked}")
+	if not os.path.exists(picked_file):
+		picked = random.choice(words)
+		with open(picked_file, 'w') as pf:
+			pf.write(picked)
+	else:
+		with open(picked_file, 'r') as pf:
+			picked = pf.readline()
 
 init()
 pick_a_random_word_of_the_day()
