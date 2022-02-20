@@ -17,6 +17,8 @@ const KEY_INITIAL = 1;
 const KEY_SPOTON = 2;
 const KEY_INWORD = 3;
 
+const LOCALE = 'uk-UA';
+
 const t_bgcolors = [
 	'#808080',
 	'#ddddcc',
@@ -54,7 +56,7 @@ var initial_state = {
 function objectify(cookie) {
 	var ck;
 	var now = new Date();
-	var now_fmt = now.toLocaleDateString('en-US', {
+	var now_fmt = now.toLocaleDateString(LOCALE, {
 			year: 'numeric',
 			month: 'long',
 			day: 'numeric',

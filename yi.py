@@ -55,7 +55,7 @@ def pick_a_random_word_of_the_day():
 			pf.write(picked)
 	else:
 		with open(picked_file, 'r') as pf:
-			picked = pf.readline()
+			picked = pf.readline().rstrip('\r\n')
 
 init()
 pick_a_random_word_of_the_day()
