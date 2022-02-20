@@ -48,6 +48,15 @@ button svg {
     margin-top: 50px;
 }
 
+#keyboard input {
+    border: none;
+}
+
+#keyboard button {
+    border: none;
+    border-radius: 0;
+}
+
 #statistics_modal_title {
     font-weight: bold;
 }

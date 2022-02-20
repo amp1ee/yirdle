@@ -1,1 +1,2 @@
 flask-bootstrap>=3.3.7
+flask-fontawesome>=0.1.5

@@ -169,6 +169,40 @@ function countdown() {
 	}, 100);
 }
 
+function append_backspace(row) {
+	var divcol = document.createElement('div');
+	divcol.classList.add('col');
+
+	var span = document.createElement('span');
+
+	var i = document.createElement('i');
+	i.classList.add('fa');
+	i.classList.add('fa-backspace');
+	i.setAttribute('style', 'color: black;');
+
+	var button = document.createElement('button');
+	button.classList.add('btn');
+	button.classList.add('btn-default');
+	button.onclick = function() {
+		var letters = document.getElementsByClassName('letter');
+
+		for (let i = letters.length - 1; i >= 0; i--) {
+			var input = letters[i].firstChild;
+
+			if (!input.disabled && input.value.length > 0) {
+				input.value = '';
+				input.focus();
+				break;
+			}
+		}
+	};
+
+	span.appendChild(i);
+	button.appendChild(span);
+	divcol.appendChild(button);
+	row.appendChild(divcol);
+}
+
 function draw_keyboard() {
 	const row_1st = 13;
 	const row_2nd = row_1st + 11;
@@ -235,6 +269,10 @@ function draw_keyboard() {
 
 				if (!input.disabled && !input.value.length) {
 					input.value = this.value;
+					if ((i + 1) % WORDLEN)
+						letters[i + 1].firstChild.focus();
+					else
+						btn.focus();
 					break;
 				}
 			}
@@ -253,6 +291,8 @@ function draw_keyboard() {
 		}
 		i++;
 	}
+
+	append_backspace(row2);
 
 }
 
@@ -417,6 +457,9 @@ function check_row(number) {
 		}
 
 		active_row += 1;
+
+		if (active_row <= MAXROW)
+			document.getElementById('letter' + active_row + '1').focus();
 	}
 }
 
@@ -529,5 +572,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 
 	draw_keyboard();
+	document.getElementById('letter11').focus();
 
 });
