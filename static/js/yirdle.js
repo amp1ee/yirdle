@@ -161,7 +161,7 @@ function countdown() {
 		minutes = (minutes < 10) ? '0' + minutes : minutes;
 		hours = (hours < 10) ? '0' + hours : hours;
 
-		text = '<b>Наступне слово за:</b> ';
+		text = 'Наступне слово за ';
 		text += hours + ":" + minutes + ":" + seconds + "\n";
 		document.getElementById("countdown").innerHTML = text;
 
@@ -171,7 +171,25 @@ function countdown() {
 	}, 100);
 }
 
-function append_backspace(row) {
+function backspace_action() {
+	var letters = document.getElementsByClassName('letter');
+
+	for (let i = letters.length - 1; i >= 0; i--) {
+		var input = letters[i].firstChild;
+
+		if (!input.disabled && input.value.length > 0) {
+			input.value = '';
+			input.focus();
+			break;
+		}
+	}
+}
+
+function enter_action() {
+	btn.click();
+}
+
+function append_button(row, btn_class, action) {
 	var divcol = document.createElement('div');
 	divcol.classList.add('col');
 
@@ -179,27 +197,21 @@ function append_backspace(row) {
 
 	var i = document.createElement('i');
 	i.classList.add('fa');
-	i.classList.add('fa-backspace');
+	i.classList.add(btn_class);
 	i.setAttribute('style', 'color: black;');
 
 	var button = document.createElement('button');
 	button.classList.add('btn');
 	button.classList.add('btn-default');
-	button.onclick = function() {
-		var letters = document.getElementsByClassName('letter');
-
-		for (let i = letters.length - 1; i >= 0; i--) {
-			var input = letters[i].firstChild;
-
-			if (!input.disabled && input.value.length > 0) {
-				input.value = '';
-				input.focus();
-				break;
-			}
-		}
-	};
+	button.onclick = action;
 
 	span.appendChild(i);
+
+	if (action === enter_action) {
+		button.setAttribute("style", "width: 6em");
+		span.innerHTML += ' enter';
+	}
+
 	button.appendChild(span);
 	divcol.appendChild(button);
 	row.appendChild(divcol);
@@ -294,7 +306,8 @@ function draw_keyboard() {
 		i++;
 	}
 
-	append_backspace(row2);
+	append_button(row2, 'fa-backspace', backspace_action);
+	append_button(row3, 'fa-sign-in-alt', enter_action);
 
 }
 
@@ -333,6 +346,7 @@ function share_action() {
 
 	msg = 'Їrdle: ' + row_c + '/6\n';
 	msg += time + '\n';
+	msg += 'Cерія: ' + ck.cur_streak + '\n';
 	msg += txt.join("");
 	msg += window.origin + '\n';
 	msg += '#wordle #yirdle\n';
