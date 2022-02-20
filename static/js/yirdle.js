@@ -18,7 +18,7 @@ const KEY_SPOTON = 2;
 const KEY_INWORD = 3;
 
 const t_bgcolors = [
-	'#ee9090',
+	'#808080',
 	'#ddddcc',
 	'#90ee90',
 	'#eeee90'
@@ -225,6 +225,20 @@ function draw_keyboard() {
 		key_in.setAttribute("size", "1");
 		key_in.setAttribute("readonly", "");
 		key_in.value = letter;
+
+		key_in.onclick = function() {
+			var letters = document.getElementsByClassName('letter');
+			var input;
+
+			for (let i = 0; i < letters.length; i++) {
+				input  = letters[i].firstChild;
+
+				if (!input.disabled && !input.value.length) {
+					input.value = this.value;
+					break;
+				}
+			}
+		};
 
 		var key_status = alphabit.split("")[i];
 		key.setAttribute("style", "background-color: " + t_bgcolors[key_status]);
