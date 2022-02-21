@@ -7,8 +7,15 @@ input {
     text-align: center;
     font-size: 1.5em;
     cursor: pointer;
-    border: none;
     outline: none;
+}
+
+button {
+    outline: none !important;
+}
+
+#keyboard input {
+    border: none;
 }
 
 button svg {

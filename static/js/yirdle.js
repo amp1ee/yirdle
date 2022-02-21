@@ -20,7 +20,7 @@ const KEY_INWORD = 3;
 const LOCALE = 'uk-UA';
 
 const t_bgcolors = [
-	'#808080',
+	'#606060',
 	'#ffffff',
 	'#90ee90',
 	'#eeee90'
@@ -115,7 +115,7 @@ function disable_rows(current_row) {
 		for (let j = 1; j <= WORDLEN; j++) {
 			letter = document.getElementById('letter' + i + j);
 			letter.setAttribute("disabled", "disabled");
-			letter.style.backgroundColor = '#eeeedd';
+			letter.setAttribute("style", "background-color: #eeeedd;");
 		}
 	}
 }
@@ -294,9 +294,9 @@ function draw_keyboard() {
 		};
 
 		var key_status = alphabit.split("")[i];
-		key_in.style.backgroundColor = t_bgcolors[key_status];
+		key_in.setAttribute("style", "background-color: " + t_bgcolors[key_status]);
 		if (key_status == KEY_INACTIVE)
-			key_in.style.color = '#f0f0df';
+			key_in.setAttribute("style", "color: #f0f0df; background-color: " + t_bgcolors[KEY_INACTIVE]);
 		key.appendChild(key_in);
 
 		if (i < row_1st) {
@@ -337,7 +337,7 @@ function share_action() {
 				letter = document.getElementById('letter' + (i+1) + (j+1));
 				style_attr = letter.getAttribute("style");
 				if (style_attr != null) {
-					bg_color = style_attr.split(' ')[1];
+					bg_color = style_attr.split('background-color: ')[1];
 				}
 				emoji_id = t_bgcolors.indexOf(bg_color);
 				txt.push(t_emojis[emoji_id]);
@@ -448,9 +448,9 @@ function check_row(number) {
 
 			cur.setAttribute("disabled", "disabled");
 			if (key_status != KEY_INACTIVE) {
-				cur.style.backgroundColor = t_bgcolors[key_status];
+				cur.setAttribute("style", "background-color: " + t_bgcolors[key_status]);
 			} else {
-				cur.style.backgroundColor = '#eeeedd';
+				cur.setAttribute("style", "color: #f0f0df; background-color: " + t_bgcolors[KEY_INACTIVE]);
 			}
 		}
 
@@ -471,7 +471,7 @@ function check_row(number) {
 			result = '<b>Поразка</b>';
 			btn.innerHTML = result;
 			document.getElementById('hdr').innerHTML = result;
-			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_INACTIVE]);
+			btn.setAttribute("style", "background-color: "  + t_bgcolors[KEY_INACTIVE]);
 			btn.setAttribute("disabled", "disabled");
 			game_status = "loss";
 			show_share_buttons();
