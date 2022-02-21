@@ -21,7 +21,7 @@ const LOCALE = 'uk-UA';
 
 const t_bgcolors = [
 	'#808080',
-	'#ddddcc',
+	'#ffffff',
 	'#90ee90',
 	'#eeee90'
 ];
@@ -238,12 +238,12 @@ function draw_keyboard() {
 		row2 = document.createElement("div");
 		row2.classList.add("row");
 		row2.id = "row2";
-		row2.setAttribute("style", "margin-left: 10px");
+		row2.setAttribute("style", "margin-left: 5px");
 
 		row3 = document.createElement("div");
 		row3.classList.add("row");
 		row3.id = "row3";
-		row3.setAttribute("style", "margin-left: 20px");
+		row3.setAttribute("style", "margin-left: 15px");
 
 		keyboard.appendChild(row1);
 		keyboard.appendChild(row2);
@@ -293,7 +293,9 @@ function draw_keyboard() {
 		};
 
 		var key_status = alphabit.split("")[i];
-		key.setAttribute("style", "background-color: " + t_bgcolors[key_status]);
+		key_in.style.backgroundColor = t_bgcolors[key_status];
+		if (key_status == KEY_INACTIVE)
+			key_in.style.color = '#f0f0df';
 		key.appendChild(key_in);
 
 		if (i < row_1st) {
@@ -506,6 +508,7 @@ function stats_modal_show(game_status) {
 	var ck = get_cookie();
 	var timer;
 	var summary;
+	var txt_div;
 
 	switch (game_status) {
 	
@@ -522,12 +525,15 @@ function stats_modal_show(game_status) {
 	timer = document.createElement('span');
 	timer.id = 'countdown';
 
-	stats_mbody.innerHTML = summary
+	txt_div = document.createElement('div');
+	txt_div.id = 'txt_div';
+	txt_div.innerHTML = summary
 							+ '</br><b>Ряд:</b> ' + ck.row_index
 							+ '</br><b>Час:</b> ' + ck.last_completed_fmt
 							+ '</br><b>Серія:</b> ' + ck.cur_streak
 							+ '</br>';
-	stats_mbody.appendChild(timer);
+	txt_div.appendChild(timer);
+	stats_mbody.appendChild(txt_div);
 	countdown();
 
 	stats_modal.classList.add('show');

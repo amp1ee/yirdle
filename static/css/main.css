@@ -32,7 +32,7 @@ button svg {
 }
 
 .col {
-    padding: 3px;
+    margin: 3px;
 }
 
 .letter {
@@ -42,6 +42,28 @@ button svg {
 
 .modal-dialog {
     margin-top: 160px;
+}
+
+.modal-header {
+    background-color: #292929;
+    color: #dfdfdf;
+}
+
+.modal-body {
+    background-color: #fffffa;
+}
+
+.modal-footer {
+    background-color: #fffffa;
+}
+
+#txt_div {
+    margin-left: 3px;
+    font-size: 1.1em;
+}
+
+#enter {
+    margin-top: 10px;
 }
 
 #keyboard {
@@ -55,10 +77,6 @@ button svg {
 #keyboard button {
     border: none;
     border-radius: 0;
-}
-
-#statistics_modal_title {
-    font-weight: bold;
 }
 
 @-webkit-keyframes shake {
