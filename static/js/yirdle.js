@@ -525,6 +525,10 @@ function stats_modal_show(game_status) {
 	timer = document.createElement('span');
 	timer.id = 'countdown';
 
+	txt_div = document.getElementById('txt_div');
+	if (txt_div != null)
+		txt_div.parentNode.removeChild(txt_div);
+
 	txt_div = document.createElement('div');
 	txt_div.id = 'txt_div';
 	txt_div.innerHTML = summary
