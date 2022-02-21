@@ -14,7 +14,7 @@ wordlist = """
 """
 words = []
 picked = 'xxxxx'
-d = datetime.datetime.now()
+d = datetime.datetime.now() + datetime.timedelta(hours=2)
 picked_file = '/tmp/.yirdle-picked-' + d.strftime('%d.%m.%Y')
 
 def init():
