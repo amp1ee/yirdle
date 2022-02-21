@@ -7,6 +7,8 @@ input {
     text-align: center;
     font-size: 1.5em;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 button svg {
@@ -68,10 +70,6 @@ button svg {
 
 #keyboard {
     margin-top: 50px;
-}
-
-#keyboard input {
-    border: none;
 }
 
 #keyboard button {

@@ -115,6 +115,7 @@ function disable_rows(current_row) {
 		for (let j = 1; j <= WORDLEN; j++) {
 			letter = document.getElementById('letter' + i + j);
 			letter.setAttribute("disabled", "disabled");
+			letter.style.backgroundColor = '#eeeedd';
 		}
 	}
 }
@@ -447,7 +448,9 @@ function check_row(number) {
 
 			cur.setAttribute("disabled", "disabled");
 			if (key_status != KEY_INACTIVE) {
-				cur.setAttribute("style", "background-color: " + t_bgcolors[key_status]);
+				cur.style.backgroundColor = t_bgcolors[key_status];
+			} else {
+				cur.style.backgroundColor = '#eeeedd';
 			}
 		}
 
