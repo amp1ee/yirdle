@@ -25,6 +25,11 @@ button svg {
     vertical-align: middle;
 }
 
+::selection {
+    background-color: #333333;
+    color: #ddddcc;
+}
+
 .navbar-header a {
     color: white !important;
 }

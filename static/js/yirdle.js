@@ -11,26 +11,25 @@ var game_status = "init";
 
 const WORDLEN = 5;
 const MAXROW = 6;
+const LOCALE = 'uk-UA';
 
 const KEY_INACTIVE = 0;
 const KEY_INITIAL = 1;
-const KEY_SPOTON = 2;
-const KEY_INWORD = 3;
-
-const LOCALE = 'uk-UA';
+const KEY_INWORD = 2;
+const KEY_SPOTON = 3;
 
 const t_bgcolors = [
 	'#606060',
 	'#ffffff',
+	'#eeee90',
 	'#90ee90',
-	'#eeee90'
 ];
 
 const t_emojis = [
 	'⬛️',
 	'⬛️',
+	'🟨',
 	'🟩',
-	'🟨'
 ];
 
 const alphabet = "йцукенгґшщзхїфівапролджєячсмитьбю";
@@ -265,7 +264,7 @@ function draw_keyboard() {
 	var i = 0;
 	var cur_row = 1;
 
-	for (const letter of alphabet.split("")) {
+	for (var letter of alphabet.split("")) {
 
 		key = document.createElement("div");
 		key.classList.add('col');
@@ -374,7 +373,7 @@ function share_action() {
 		}
 
 		document.body.removeChild(txt_area);
-		share_btn.innerHTML = "<b>Скопійовано!</b>";
+		share_btn.innerHTML = "Скопійовано!";
 
 	} else if (this.id == "tweet_btn") {
 		window.open('https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(window.origin) + '&text=' + encodeURIComponent(msg));
@@ -390,13 +389,19 @@ function show_share_buttons() {
 function mark_letter(marked_letter, type) {
 
 	var i = 0;
+	var mark;
 
 	arr_alphabit = alphabit.split("");
 	marked_letter = marked_letter.toLowerCase();
 
 	for (var l of alphabet.split("")) {
-		if (marked_letter == l && arr_alphabit[i] != KEY_SPOTON) {
-			arr_alphabit[i] = type.toString();
+		mark = arr_alphabit[i];
+
+		if (marked_letter == l ) {
+			if (type > mark)
+				arr_alphabit[i] = type.toString();
+			else if (type == KEY_INACTIVE && mark == KEY_INITIAL)
+				arr_alphabit[i] = KEY_INACTIVE;
 		}
 		i++;
 	}
