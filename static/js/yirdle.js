@@ -403,13 +403,34 @@ function mark_letter(marked_letter, type) {
 	alphabit = arr_alphabit.join("");
 }
 
+function check_key_used(letters, i, key) {
+
+	i -= 2;
+	while (i >= 0) {
+		if (letters[i].value.toLowerCase() == key) {
+			return i;
+		}
+		i--;
+	}
+
+	return -1;
+}
+
+function set_style(elem, style) {
+	elem.setAttribute("style", style);
+}
+
 function check_row(number) {
 	var letters = [];
 	var word = [];
 	var row_letters = 0;
 	var guessed = 0;
 	var cur = {};
+	var cur_value;
+	var key_count;
 	var key_status = KEY_INITIAL;
+	var key_used;
+	var re;
 
 	if (number > MAXROW)
 		return;
@@ -433,13 +454,26 @@ function check_row(number) {
 
 		for (let i = 1; i <= WORDLEN; i++) {
 			cur = letters[i - 1];
+			cur_value = cur.value.toLowerCase();
+			re = new RegExp(cur_value, 'g');
+			key_count = (picked.match(re) || []).length;
+			key_used = check_key_used(letters, i, cur_value);
+			console.log(cur_value, key_count, key_used);
 
-			if (picked[i - 1] == cur.value.toLowerCase()) {
+			if (picked[i - 1] == cur_value) {
 				guessed += 1;
 				key_status = KEY_SPOTON;
+				if (key_used != -1 && key_count == 1) {
+					set_style(letters[key_used], "color: #f0f0df; background-color: "
+									 + t_bgcolors[KEY_INACTIVE]);
+				}
 			}
-			else if (picked.includes(cur.value.toLowerCase())) {
-				key_status = KEY_INWORD;
+			else if (picked.includes(cur_value)) {
+				if (key_count == 1) {
+					key_status = (key_used >= 0) ? KEY_INACTIVE : KEY_INWORD;
+				} else if (key_count > 1) {
+					key_status = KEY_INWORD;
+				}
 			}
 			else {
 				key_status = KEY_INACTIVE;
@@ -448,9 +482,10 @@ function check_row(number) {
 
 			cur.setAttribute("disabled", "disabled");
 			if (key_status != KEY_INACTIVE) {
-				cur.setAttribute("style", "background-color: " + t_bgcolors[key_status]);
+				set_style(cur, "background-color: " + t_bgcolors[key_status]);
 			} else {
-				cur.setAttribute("style", "color: #f0f0df; background-color: " + t_bgcolors[KEY_INACTIVE]);
+				set_style(cur, "color: #f0f0df; background-color: "
+								+ t_bgcolors[KEY_INACTIVE]);
 			}
 		}
 
@@ -460,7 +495,7 @@ function check_row(number) {
 			result = '<b>Перемога!</b>';
 			btn.innerHTML = result;
 			document.getElementById('hdr').innerHTML = result;
-			btn.setAttribute("style", "background-color: " + t_bgcolors[KEY_SPOTON]);
+			set_style(btn, "background-color: " + t_bgcolors[KEY_SPOTON]);
 			btn.setAttribute("disabled", "disabled");
 			disable_rows(active_row);
 			game_status = "win";
@@ -471,7 +506,7 @@ function check_row(number) {
 			result = '<b>Поразка</b>';
 			btn.innerHTML = result;
 			document.getElementById('hdr').innerHTML = result;
-			btn.setAttribute("style", "background-color: "  + t_bgcolors[KEY_INACTIVE]);
+			set_style(btn, "background-color: "  + t_bgcolors[KEY_INACTIVE]);
 			btn.setAttribute("disabled", "disabled");
 			game_status = "loss";
 			show_share_buttons();
