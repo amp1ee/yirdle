@@ -30,8 +30,27 @@ button svg {
     color: #ddddcc;
 }
 
+::-moz-selection {
+    background-color: #333333;
+    color: #ddddcc;
+}
+
 .navbar-header a {
-    color: white !important;
+    color: #efefde !important;
+}
+
+.navbar-brand {
+    margin-top: 3px;
+    font-size: 2em;
+    font-style: italic;
+}
+
+.navbar-header .navbar-toggle .icon-bar {
+    background-color: #efefde;
+}
+
+.navbar-brand span {
+    font-style: normal;
 }
 
 #hdr {
