@@ -210,6 +210,7 @@ function append_button(row, btn_class, action) {
 
 	if (action === enter_action) {
 		button.setAttribute("style", "width: 6em");
+		button.id = "kb_enter";
 		span.innerHTML += ' enter';
 	}
 
@@ -449,6 +450,10 @@ function check_row(number) {
 
 		if (!word_list.includes(word.toLowerCase())) {
 			btn.classList.add("apply-shake");
+			btn.onanimationend = function() {
+				btn.classList.remove("apply-shake");
+			};
+
 			return;
 		}
 
@@ -533,53 +538,48 @@ btn.onclick = function() {
 	}
 }
 
-btn.onanimationend = function(event) {
-	btn.classList.remove("apply-shake");
-}
-
 function stats_modal_hide() {
 	stats_modal.classList.remove('show');
 	stats_modal.classList.remove('in');
 }
 
 function stats_modal_show(game_status) {
-	var ck = get_cookie();
-	var timer;
-	var summary;
-	var txt_div;
+		var ck = get_cookie();
+		var timer;
+		var summary;
+		var txt_div;
 
-	switch (game_status) {
-	
-		case 'win':
-			summary = '<b>Відгадане слово:</b> ' + picked;
-			break;
-		case 'loss':
-			summary = '<b>Поразка</b>';
-			break;
-		default:
-			summary = '';
-	}
+		switch (game_status) {
+		
+			case 'win':
+				summary = '<b>Відгадане слово:</b> ' + picked;
+				break;
+			case 'loss':
+				summary = '<b>Поразка</b>';
+				break;
+			default:
+				summary = '';
+		}
 
-	timer = document.createElement('span');
-	timer.id = 'countdown';
+		timer = document.createElement('span');
+		timer.id = 'countdown';
 
-	txt_div = document.getElementById('txt_div');
-	if (txt_div != null)
-		txt_div.parentNode.removeChild(txt_div);
+		txt_div = document.getElementById('txt_div');
+		if (txt_div != null)
+			txt_div.parentNode.removeChild(txt_div);
 
-	txt_div = document.createElement('div');
-	txt_div.id = 'txt_div';
-	txt_div.innerHTML = summary
+		txt_div = document.createElement('div');
+		txt_div.id = 'txt_div';
+		txt_div.innerHTML = summary
 							+ '</br><b>Ряд:</b> ' + ck.row_index
 							+ '</br><b>Час:</b> ' + ck.last_completed_fmt
 							+ '</br><b>Серія:</b> ' + ck.cur_streak
-							+ '</br>';
-	txt_div.appendChild(timer);
-	stats_mbody.appendChild(txt_div);
-	countdown();
-
-	stats_modal.classList.add('show');
-	stats_modal.classList.add('in');
+							+ '</br></br>';
+		txt_div.appendChild(timer);
+		countdown();
+		stats_mbody.appendChild(txt_div);
+		stats_modal.classList.add('show');
+		stats_modal.classList.add('in');
 }
 
 stats_mclose[0].onclick = stats_modal_hide;

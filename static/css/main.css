@@ -12,6 +12,8 @@ input {
 
 button {
     outline: none !important;
+    border: none;
+    border-radius: 0;
 }
 
 #keyboard input {
@@ -77,11 +79,6 @@ button svg {
 
 #keyboard {
     margin-top: 50px;
-}
-
-#keyboard button {
-    border: none;
-    border-radius: 0;
 }
 
 @-webkit-keyframes shake {
