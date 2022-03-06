@@ -602,6 +602,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		for (let i = 1; i <= WORDLEN; i++) {
 			lett = document.getElementById('letter' + j + i);
 			lett.setAttribute("autocomplete", "off");
+			lett.setAttribute("inputmode", "none");
 
 			lett.onkeydown = function(event) {
 				// Handle Backspace key
@@ -626,7 +627,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 			lett.onkeyup = function(event) {
 				// Enter key
-				if (i == WORDLEN && event.keyCode == 13) {
+				if (event.keyCode == 13) {
 					btn.click();
 				}
 			};
