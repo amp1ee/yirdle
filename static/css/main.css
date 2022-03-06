@@ -36,7 +36,7 @@ button svg {
 }
 
 .navbar-header a {
-    color: #efefde !important;
+    color: #f3f3ed !important;
 }
 
 .navbar-brand {
@@ -46,7 +46,7 @@ button svg {
 }
 
 .navbar-header .navbar-toggle .icon-bar {
-    background-color: #efefde;
+    background-color: #f3f3ed;
 }
 
 .navbar-brand span {
