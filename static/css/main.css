@@ -10,6 +10,12 @@ input {
     outline: none;
 }
 
+@supports (-webkit-touch-callout: none) {
+    input[type="text"] {
+        width: 110%;
+    }
+}
+
 button {
     outline: none !important;
     border: none;
