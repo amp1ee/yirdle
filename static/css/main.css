@@ -14,6 +14,9 @@ input {
     input[type="text"] {
         width: 110%;
     }
+    input[type="text"]:disabled {
+        opacity: 1;
+    }
 }
 
 button {
