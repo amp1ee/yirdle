@@ -63,18 +63,34 @@ function objectify(cookie) {
 			minute: 'numeric',
 
 	});
+	var days_diff = 0;
 
 	if (cookie == null)
 		ck = new Object();
 	else
+	{
 		ck = cookie;
+		if (ck.last_completed != null) {
+			var now_midnight = new Date(now);
+			now_midnight.setUTCHours(0, 0, 0, 0);
+			var last_midnight = new Date(ck.last_completed);
+			last_midnight.setUTCHours(0, 0, 0, 0);
+			days_diff = (now_midnight.getTime() - last_midnight.getTime())
+						/ (1000 * 3600 * 24);
+		}
+	}
 
 	ck.row_index = active_row;
 	ck.game_status = game_status;
 	if (game_status == "win" || game_status == "loss") {
 		if (ck.solution != picked) {
 			ck.games_played += 1;
-			ck.cur_streak += (game_status == "win");
+			if (game_status == "win") {
+				if (days_diff < 2)
+					ck.cur_streak++;
+				else
+					ck.cur_streak = 1;
+			}
 		}
 		ck.solution = picked;
 	}
