@@ -652,8 +652,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 	var ck = get_cookie();
 
+	restore_board_state();
 	if (ck.solution == picked) {
-		restore_board_state();
 		stats_modal_show(ck.game_status);
 	}
 
